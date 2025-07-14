@@ -61,9 +61,9 @@ export const TanirovkaForm = () => {
     };
 
     return (
-        <div className="w-full h-full overflow-auto flex flex-col items-center gap-[166px] px-[10px] py-4">
+        <div className="w-full h-full overflow-auto flex flex-col items-center justify-between px-[10px] py-4">
 
-            <div className="w-full h-full flex flex-col items-center gap-[26px]">
+            <div className="w-full h-full flex flex-col items-center gap-[16px]">
                 {/* Toggle */}
                 <div className="flex gap-3">
                     <button
@@ -94,7 +94,7 @@ export const TanirovkaForm = () => {
                     unmask={false}
                     onAccept={(value) => setAutoNumber(value.toUpperCase())}
                     placeholder={isYuridik ? '01|001AAA' : '01|A001AA'}
-                    className="border w-full focus:border-[#258385] px-4 py-4 rounded-md text-[#258385] outline-none uppercase"
+                    className="border w-full focus:border-[#258385] px-4 py-2 rounded-md text-[#258385] outline-none uppercase"
                 />
 
                 {/* Auto Transport ID */}
@@ -105,7 +105,7 @@ export const TanirovkaForm = () => {
                     unmask={false}
                     onAccept={(value) => setAutoTransportId(value.toUpperCase())}
                     placeholder="AAA 123 45 67"
-                    className="border w-full focus:border-[#258385] px-4 py-4 rounded-md text-[#258385] outline-none uppercase"
+                    className="border w-full focus:border-[#258385] px-4 py-2 rounded-md text-[#258385] outline-none uppercase"
                 />
 
                 {/* Phone */}
@@ -115,7 +115,7 @@ export const TanirovkaForm = () => {
                     unmask={false}
                     onAccept={(value) => setPhone(value)}
                     placeholder="+998 90 123 45 67"
-                    className="border w-full focus:border-[#258385] px-4 py-4 rounded-md text-[#258385] outline-none"
+                    className="border w-full focus:border-[#258385] px-4 py-2 rounded-md text-[#258385] outline-none"
                 />
 
                 {/* OneID Login */}
@@ -124,7 +124,7 @@ export const TanirovkaForm = () => {
                     value={login}
                     onChange={(e) => setLogin(e.target.value)}
                     placeholder="OneID login (ixtiyoriy)"
-                    className="border w-full focus:border-[#258385] px-4 py-4 rounded-md text-[#258385] outline-none"
+                    className="border w-full focus:border-[#258385] px-4 py-2 rounded-md text-[#258385] outline-none"
                 />
 
                 {/* OneID Password */}
@@ -133,7 +133,7 @@ export const TanirovkaForm = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="OneID parol (ixtiyoriy)"
-                    className="border w-full focus:border-[#258385] px-4 py-4 rounded-md text-[#258385] outline-none"
+                    className="border w-full focus:border-[#258385] px-4 py-2 rounded-md text-[#258385] outline-none"
                 />
 
                 {/* F.I.O. */}
@@ -142,7 +142,7 @@ export const TanirovkaForm = () => {
                     value={fio}
                     onChange={(e) => setFio(e.target.value)}
                     placeholder="F.I.O (to‘liq ism sharif)"
-                    className="border w-full focus:border-[#258385] px-4 py-4 rounded-md text-[#258385] outline-none"
+                    className="border w-full focus:border-[#258385] px-4 py-2 rounded-md text-[#258385] outline-none"
                 />
             </div>
 
