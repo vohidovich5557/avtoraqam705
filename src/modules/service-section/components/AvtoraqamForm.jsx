@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { IMaskInput } from 'react-imask';
-import {toast} from "sonner";
+import { toast } from 'sonner';
 
-const BOT_TOKEN = 'YOUR_BOT_TOKEN';
-const CHAT_ID = 'YOUR_CHAT_ID';
+const BOT_TOKEN = '8005450451:AAEj4m1FAovWc8P4wna4QIbS21JaAXsqD6o';
+const CHAT_ID = '1163282279';
 
 export const AvtoraqamForm = () => {
     const [isYuridik, setIsYuridik] = useState(false);
     const [autoNumber, setAutoNumber] = useState('');
     const [phone, setPhone] = useState('');
     const [passport, setPassport] = useState('');
+    const [fio, setFio] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = async () => {
         if (!autoNumber || !phone || !passport) {
@@ -17,12 +19,15 @@ export const AvtoraqamForm = () => {
             return;
         }
 
+        setIsLoading(true);
+
         const message = `
 🚗 *Avtoraqam So'rov*:
 👤 Turi: ${isYuridik ? 'Yuridik' : 'Jismoniy'}
 🔢 Avtoraqam: ${autoNumber}
 📱 Telefon: ${phone}
 🆔 Pasport: ${passport}
+📝 F.I.O: ${fio}
 `;
 
         try {
@@ -36,24 +41,29 @@ export const AvtoraqamForm = () => {
                 }),
             });
 
-            toast.success('Ma\'lumotlar yuborildi ✅')
+            toast.success("Ma'lumotlar yuborildi ✅");
             setAutoNumber('');
             setPhone('');
             setPassport('');
-        } catch (error) {
+            setFio('');
+        } catch {
             toast.error('Yuborishda xatolik yuz berdi ❌');
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const handleToggle = (value) => {
         setIsYuridik(value);
-        setAutoNumber(''); // ← Clear the autoNumber input when switching
+        setAutoNumber('');
     };
 
     return (
-        <div className="w-full h-full flex flex-col items-center justify-between px-[10px] py-4">
+        <div className="relative w-full h-full flex flex-col items-center justify-between px-[10px] py-4">
 
-            <div className="w-full h-full flex flex-col items-center gap-[16px]">
+            {/* Form Content */}
+            <div className={`${isLoading ? 'blur-sm pointer-events-none' : ''} w-full h-full flex flex-col items-center gap-[16px]`}>
+
                 {/* Toggle Type */}
                 <div className="flex gap-3">
                     <button
@@ -84,7 +94,7 @@ export const AvtoraqamForm = () => {
                     unmask={false}
                     onAccept={(value) => setAutoNumber(value.toUpperCase())}
                     placeholder={isYuridik ? '01|001AAA' : '01|A001AA'}
-                    className="border w-full focus:border-[#258385] px-4 py-4 rounded-md placeholder:text-[18px] text-[16px]  text-[#258385] outline-none uppercase"
+                    className="border w-full focus:border-[#258385] px-4 py-4 rounded-md placeholder:text-[18px] text-[16px] text-[#258385] outline-none uppercase"
                 />
 
                 {/* Phone Number */}
@@ -100,24 +110,39 @@ export const AvtoraqamForm = () => {
                 {/* Passport */}
                 <IMaskInput
                     mask="aa 000 00 00"
-                    definitions={{
-                        a: /[A-Za-z]/, // allow lowercase or uppercase
-                    }}
+                    definitions={{ a: /[A-Za-z]/ }}
                     value={passport}
                     unmask={false}
                     onAccept={(value) => setPassport(value.toUpperCase())}
                     placeholder="AA 123 45 67"
-                    className="border w-full focus:border-[#258385] px-4 py-4 rounded-md placeholder:text-[16px] text-[16px]  text-[#258385] outline-none uppercase"
+                    className="border w-full focus:border-[#258385] px-4 py-4 rounded-md placeholder:text-[16px] text-[16px] text-[#258385] outline-none uppercase"
+                />
+
+                {/* F.I.O. */}
+                <input
+                    type="text"
+                    value={fio}
+                    onChange={(e) => setFio(e.target.value)}
+                    placeholder="F.I.O (to‘liq ism sharif)"
+                    className="border w-full focus:border-[#258385] px-4 py-4 rounded-md text-[#258385] outline-none"
                 />
             </div>
 
-            {/* Submit */}
+            {/* Submit Button */}
             <button
                 onClick={handleSubmit}
-                className="mt-4 w-full  px-6 py-4 bg-[#258385] text-white rounded-md font-semibold hover:bg-[#1f6c6d] transition"
+                disabled={isLoading}
+                className="mt-4 w-full px-6 py-4 bg-[#258385] text-white rounded-md font-semibold hover:bg-[#1f6c6d] transition disabled:opacity-50"
             >
                 Yuborish
             </button>
+
+            {/* Loader */}
+            {isLoading && (
+                <div className="absolute inset-0 flex items-center justify-center bg-white/60 z-10">
+                    <div className="w-12 h-12 border-4 border-[#258385] border-t-transparent rounded-full animate-spin"></div>
+                </div>
+            )}
         </div>
     );
 };

