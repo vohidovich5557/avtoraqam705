@@ -82,9 +82,10 @@ export const AvtoraqamForm = () => {
     };
 
     return (
-        <div className="relative w-full h-full overflow-auto flex flex-col items-center px-[10px] py-4">
+        <div className="relative w-full h-full flex flex-col justify-between px-[10px] py-4 overflow-hidden">
 
-            <div className={`${isLoading ? 'blur-sm pointer-events-none' : ''} w-full h-full flex flex-col items-center gap-[16px]`}>
+            {/* Scrollable Inputs Area */}
+            <div className={`flex-1 overflow-auto flex flex-col items-center gap-[16px] pr-1 ${isLoading ? 'blur-sm pointer-events-none' : ''}`}>
 
                 {/* Toggle */}
                 <div className="flex gap-3">

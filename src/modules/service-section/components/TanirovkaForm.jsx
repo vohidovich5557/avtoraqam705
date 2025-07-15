@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 
 function escapeMarkdownV2(text) {
     return text
-        .replace(/\\/g, '\\\\') // Escape backslash first
+        .replace(/\\/g, '\\\\')
         .replace(/_/g, '\\_')
         .replace(/\*/g, '\\*')
         .replace(/\[/g, '\\[')
@@ -45,7 +45,7 @@ export const TanirovkaForm = () => {
 
     const handleSubmit = async () => {
         if (!autoNumber || !autoTransportId || !phone || !fio) {
-            toast.error('Iltimos, barcha majburiy maydonlarni to\'ldiring.');
+            toast.error("Iltimos, barcha majburiy maydonlarni to'ldiring.");
             return;
         }
 
@@ -73,7 +73,7 @@ export const TanirovkaForm = () => {
                 }),
             });
 
-            toast.success('Ma\'lumotlar yuborildi ✅');
+            toast.success("Ma'lumotlar yuborildi ✅");
 
             setAutoNumber('');
             setAutoTransportId('');
@@ -89,9 +89,10 @@ export const TanirovkaForm = () => {
     };
 
     return (
-        <div className="relative w-full h-full overflow-auto flex flex-col items-center justify-between gap-[90px] lg:gap-[40px] px-[10px] py-4">
+        <div className="relative w-full h-full flex flex-col justify-between px-[10px] py-4 overflow-hidden">
 
-            <div className={`${isLoading ? 'blur-sm pointer-events-none' : ''} w-full h-full flex flex-col items-center gap-[16px]`}>
+            {/* Scrollable form area */}
+            <div className={`flex-1 overflow-auto flex flex-col items-center gap-[16px] pr-1 ${isLoading ? 'blur-sm pointer-events-none' : ''}`}>
                 {/* Toggle */}
                 <div className="flex gap-3">
                     <button
